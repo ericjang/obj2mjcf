@@ -128,7 +128,12 @@ class Material:
                     elems = [elem for elem in elems if elem != ""]
                     attrs[attr] = " ".join(elems)
                     break
-        return Material(**attrs)
+        mat = Material(**attrs)
+        # 1X hack: material may reference a texture file, so swam map_Kd with it.
+        if '.jpg' or '.png' in mat.name:
+            logging.info(f'Inferring map_Kd={mat.name}')
+            mat.map_Kd = mat.name
+        return mat
 
     def mjcf_rgba(self) -> str:
         Kd = self.Kd or "1.0 1.0 1.0"
