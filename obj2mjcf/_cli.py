@@ -130,7 +130,7 @@ class Material:
                     break
         mat = Material(**attrs)
         # 1X hack: material may reference a texture file, so swam map_Kd with it.
-        if '.jpg' or '.png' in mat.name:
+        if '.jpg' in mat.name or '.png' in mat.name:
             logging.info(f'Inferring map_Kd={mat.name}')
             mat.map_Kd = mat.name
         return mat
@@ -316,6 +316,9 @@ def process_obj(filename: Path, args: Args) -> None:
                 texture_path = Path(mtl.map_Kd)
                 texture_name = texture_path.name
                 src_filename = filename.parent / texture_path
+                if mtl.name == 'baseboard':
+                    breakpoint()
+                    pass
                 if not src_filename.exists():
                     raise RuntimeError(
                         f"The texture file {src_filename} referenced in the MTL file "
